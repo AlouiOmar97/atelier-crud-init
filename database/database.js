@@ -6,7 +6,8 @@ module.exports = initialize;
 
 async function initialize() {
   // Create the database if it doesn't already exist
-  const { host, port, user, password, database } = config.database;
+  //const { host, port, user, password, database } = config.database;
+  const { host, port, user, password, database } = process.env.NODE_ENV === 'test' ? config.databaseTest : config.database;
   const connection = await mysql.createConnection({ host, port, user, password });
   await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
 
@@ -18,6 +19,7 @@ async function initialize() {
   // Initialize models and add them to the exported db object
   const models = {
     Comment: require('../models/Comment')(sequelize),
+    User: require('../models/User')(sequelize),
     // Add other models here if needed
   };
 
